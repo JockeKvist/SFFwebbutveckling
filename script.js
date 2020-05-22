@@ -21,11 +21,11 @@ function showLogInPage()
     })
     .then(function(json)
     {
-        console.log("fetchAllMovies",json);
+        
         movies.innerHTML = "";
         for(i=0; i < json.length; i++)
             {
-                console.log(json[i].name)
+              
                 movies.innerHTML += '<img src="img/'+json[i].id+'.jpg" alt="" onclick="getTrivia('+json[i].id+')"></img>';
             }
             movies.insertAdjacentHTML("beforeend", 
@@ -44,14 +44,13 @@ function registerAStuido()
     {
         var studioName = document.getElementById("studioName").value;
         var studioPassword = document.getElementById("studioPassword").value;
-        console.log(studioName, studioPassword);
         postNewStudio(studioName, studioPassword);
     })
 }
 
 function postNewStudio(studioName, studioPassword)
 {
-    console.log(studioName, studioPassword);
+    
     var stuidoToPost = {name: studioName, password: studioPassword, verified: true}
 
     fetch ("https://localhost:44361/api/Filmstudio",
@@ -66,7 +65,7 @@ function postNewStudio(studioName, studioPassword)
 
 function loginStudio()
 {
-    console.log("loginhej");
+    
     movies.innerHTML = "Logga in";
     movies.insertAdjacentHTML("afterbegin", 
     "<div><input type='text' placeholder='Studioname' id='loginName'><input type='text' placeholder='Password' id='loginPassword'><button id='sendLogin'>Login</button></div>")
@@ -82,7 +81,7 @@ function loginStudio()
 
 function checkStudiologin(loginName, loginPassword)
 {
-    console.log("checkloginhej");
+   
     fetch("https://localhost:44361/api/Filmstudio")
     .then(function(response)
     {
@@ -90,23 +89,23 @@ function checkStudiologin(loginName, loginPassword)
     })
     .then(function(json)
     {
-        console.log("checkStudiologin", json);
+        
            
         for(i=0; i < json.length; i++)
         {
             if (loginName == json[i].name && loginPassword == json[i].password)
             {
-                console.log("Lycka");
+               
                 var userID = json[i].id;    
             }
                 
-            console.log(loginName, loginPassword);
-            console.log(json[i].name, json[i].password);
+            
+            
                 
             if (userID !== null)
             {
                 localStorage.setItem("userLog", userID);
-                console.log(localStorage.getItem("userLog"));
+                
                 WelcomePageForLoggedin();
             }
             else
@@ -119,7 +118,7 @@ function checkStudiologin(loginName, loginPassword)
 
 function WelcomePageForLoggedin()
 {
-    console.log(localStorage);
+  
     movies.innerHTML = "Välkommen";
     
     movies.insertAdjacentHTML("beforeend", 
@@ -135,14 +134,13 @@ function rentAMovie()
     })
     .then(function(json)
     {
-        console.log("handlemoves",json);
-        console.log(json.filmId);
+        
         for(i=0; i < json.length; i++)
         {
                 
             if (json[i].stock > 0)
             {
-                console.log(json[i].studioId);
+                
                 movies.innerHTML += "<button onclick='postRentMovie(\"" + json[i].id + "\")'>" + json[i].name + "</button>" + "<br>";
             }
         }
@@ -165,7 +163,7 @@ function postRentMovie(id)
 
 function handleMovies()
 {
-    console.log("aids");
+    
     movies.innerHTML = "Välj en film: <br>";
 
 
@@ -176,20 +174,16 @@ function handleMovies()
     })
     .then(function(json)
     {
-        console.log("handlemoves",json);
-        console.log(json.filmId);
+        
         for(i=0; i < json.length; i++)
         {
                 
             if (json[i].studioId == Number(localStorage.getItem("userLog")) && json[i].returned == false)
             {
-                console.log(json[i].studioId);
+               
                 movies.innerHTML += "<button onclick='getReturnInfo(\"" + json[i].id + "\")'>" + json[i].filmId + "</button>" + "<br>";
             }
-            else
-            {
-                console.log("tstsaj");
-            }
+            
 
         }
         
@@ -198,7 +192,7 @@ function handleMovies()
 
 function getReturnInfo(id)
 {
-    console.log(id);
+  
     fetch("https://localhost:44361/api/RentedFilm/" + id)
 
     .then(function(response)
@@ -207,17 +201,16 @@ function getReturnInfo(id)
     })
     .then(function(json)
     {
-        console.log(json);
+       
         returnMovie(json);
     })
 }
 
 function returnMovie(movie)
 {
-    console.log(movie.id);
-    console.log(movie.filmId);
+    
     var data = "https://localhost:44361/api/RentedFilm/" + movie.id;
-    console.log(data);
+    
     fetch (data,
     {
         method:'PUT',
@@ -242,14 +235,13 @@ function findMovieTrivia()
     })
     .then(function(json)
     {
-        console.log("handlemoves",json);
-        console.log(json.filmId);
+      
         for(i=0; i < json.length; i++)
         {
                 
             if (json[i].studioId == localStorage.getItem("userLog"))
             {
-                console.log(json[i].studioId);
+          
                 movies.innerHTML += "<button onclick='postTrivia(\"" + json[i].filmId + "\")'>" + json[i].filmId + "</button>" + "<br>";
             }
         }
@@ -272,11 +264,10 @@ function postTrivia(movieId)
 
 function triviaPost(triviaToPost, movieId)
 {
-    console.log(triviaToPost, movieId);
-    console.log("sad");
+   
     
     var trivia = {FilmId: Number(movieId), Trivia: triviaToPost}
-    console.log(trivia);
+   
 
     fetch ("https://localhost:44361/api/FilmTrivia",
     {
@@ -289,7 +280,7 @@ function triviaPost(triviaToPost, movieId)
 
 function getTrivia(id)
 {
-    console.log(id);
+
     fetch("https://localhost:44361/api/FilmTrivia")
     .then(function(response)
     {
